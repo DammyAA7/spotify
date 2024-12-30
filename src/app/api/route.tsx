@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../utils/prisma";
 
-const data: any = []
-
-export function GET(){
-    return NextResponse.json({data})
+export async function GET(){
+    const users = await prisma.user.findMany()
+    return NextResponse.json({users})
 }
 
 export async function POST(req: NextRequest){
