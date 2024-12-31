@@ -9,13 +9,17 @@ generator client {
 }
 
 model User {
-  id               Int             @id @default(autoincrement())
+  auth_id          String          @id // Auth0 ID as the primary key
+  spotify_id       String          // Spotify ID as the primary key
+  name             String          // User's display name
   email            String          @unique
-  name             String
+  accessToken      String?         // Spotify access token
+  imageUrl         String?         // URL for the user's profile image
   createdAt        DateTime        @default(now())
   sentRecommendations Recommendations[] @relation("FromUser")
   receivedRecommendations Recommendations[] @relation("ToUser")
 }
+
 
 model Song {
   id                Int             @id @default(autoincrement())
@@ -27,10 +31,10 @@ model Song {
 
 model Recommendations {
   id               Int             @id @default(autoincrement())
-  fromUserId       Int
-  toUserId         Int
-  fromUser         User            @relation("FromUser", fields: [fromUserId], references: [id])
-  toUser           User            @relation("ToUser", fields: [toUserId], references: [id])
+  fromUserId       String
+  toUserId         String
+  fromUser         User            @relation("FromUser", fields: [fromUserId], references: [auth_id])
+  toUser           User            @relation("ToUser", fields: [toUserId], references: [auth_id])
   createdAt        DateTime        @default(now())
   recommendationSongs RecommendationSongs[]
 }
